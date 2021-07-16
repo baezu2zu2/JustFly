@@ -16,20 +16,20 @@ import static bazu.justfly.Fly.PLAYER_TAG;
 
 public class Detact {
 
-    private static double maxdown = 0.6;
+    private static double maxdown = 0.2;
 
     public static boolean landDetact(Player player){
         Location plyFeetLoc = player.getLocation().clone();
 
         Location plyM5Loc = player.getLocation().clone();
-        plyM5Loc = settingLoc(plyM5Loc, player.getLocation(), 0, -0.6, 0);
+        plyM5Loc.add(0, 0.6, 0);
 
-        if (isBlock(plyM5Loc, player) && plyM5Loc.getBlock().getBoundingBox().getMaxY() == player.getBoundingBox().getMinY()){
+        if (isBlock(plyM5Loc, player)){
             return true;
         }
 
         for (double y = 0;y <= maxdown;y+=0.1) {
-            plyFeetLoc = settingLoc(plyFeetLoc, player.getLocation(), 0, -y, 0);
+            plyFeetLoc.add(0, -y, 0);
 
             if ((isBlock(plyFeetLoc, player) || plyFeetLoc.getBlock().isLiquid())){
                 return true;
@@ -48,15 +48,15 @@ public class Detact {
         Location plyFeetSideLoc = plyFeetLoc.clone();
 
         Location plyM5Loc = player.getLocation().clone();
-        plyM5Loc = settingLoc(plyM5Loc, player.getLocation(), 0.3*i, -0.6, 0);
+        plyM5Loc.add(0.3*i, -0.6, 0);
 
         if (isBlock(plyM5Loc, player)){
             return true;
         }
 
         for (double y = 0;y <= maxdown;y+=0.1) {
-            plyFeetLoc = settingLoc(plyFeetLoc, player.getLocation(), -0.1*i, -y, 0);
-            plyFeetSideLoc = settingLoc(plyFeetSideLoc, player.getLocation(), 0.3*i, -y, 0);
+            plyFeetLoc.add(-0.1*i, -y, 0);
+            plyFeetSideLoc.add(0.3*i, -y, 0);
 
             if (!isBlock(plyFeetLoc, player)) {
 
@@ -78,15 +78,15 @@ public class Detact {
         Location plyFeetSideLoc = plyFeetLoc.clone();
 
         Location plyM5Loc = player.getLocation().clone();
-        plyM5Loc = settingLoc(plyM5Loc, player.getLocation(), 0, -0.6, 0.3*i);
+        plyM5Loc.add(0, -0.6, 0.3*i);
 
         if (isBlock(plyM5Loc, player)){
             return true;
         }
 
         for (double y = 0;y <= maxdown;y+=0.1) {
-            plyFeetLoc = settingLoc(plyFeetLoc, player.getLocation(), 0, -y, -0.1*i);
-            plyFeetSideLoc = settingLoc(plyFeetSideLoc, player.getLocation(), 0, -y, 0.3 * i);
+            plyFeetLoc.add(0, -y, -0.1*i);
+            plyFeetSideLoc.add(0, -y, 0.3 * i);
 
             if (!isBlock(plyFeetLoc, player)) {
 
@@ -109,20 +109,17 @@ public class Detact {
         Location plyFeetSideLoc = plyFeetLoc.clone();
 
         Location plyM5Loc = player.getLocation().clone();
-        plyM5Loc = settingLoc(plyM5Loc, player.getLocation(), 0.3*i, -0.6, 0.3*i);
+        plyM5Loc.add(0.3*i, -0.6,0.3*i);
 
         if (isBlock(plyM5Loc, player)){
             return true;
         }
 
         for (double y = 0;y <= maxdown;y+=0.1) {
-            plyFeetLoc = settingLoc(plyFeetLoc, player.getLocation(), -0.1*i, -y, -0.1*i);
-            plyFeetSideLoc = settingLoc(plyFeetSideLoc, player.getLocation(), 0.3 * i, -y, 0.3 * j);
+            plyFeetLoc.add(-0.1*i, -y, -0.1*j);
+            plyFeetSideLoc.add(0.3*i, -y, 0.3*j);
 
             if (!(isBlock(plyFeetLoc, player))) {
-
-                BoundingBox sideLocBox = plyFeetSideLoc.getBlock().getBoundingBox();
-                BoundingBox playerBox = player.getBoundingBox();
 
                 if ((isBlock(plyFeetSideLoc, player) || plyFeetSideLoc.getBlock().isLiquid())) {
                     return true;
@@ -158,6 +155,7 @@ public class Detact {
         return rst;
     }
 
+    @Deprecated
     private static Location settingLoc(Location loc, Location playerLoc, double x, double y, double z){
         Location rst = loc.clone();
         rst.setX(playerLoc.getX()+x);

@@ -9,9 +9,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 public class JustFly extends JavaPlugin {
-
-    public static final double PLUGIN_VERSION = 1.0;
-
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new Fly(), this);

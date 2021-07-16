@@ -1,6 +1,8 @@
 package bazu.justfly;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,18 +52,22 @@ public class Commands implements CommandExecutor, TabCompleter {
         if (label.equalsIgnoreCase("justfly")){
             if (args.length == 1){
                 for (String str:arguments) {
-                    if (str.substring(0, args[0].length()).equalsIgnoreCase(args[0])) {
-                        completer.add(str);
-                    }
+                    try {
+                        if (str.substring(0, args[0].length()).equalsIgnoreCase(args[0])) {
+                            completer.add(str);
+                        }
+                    }catch (StringIndexOutOfBoundsException ignored){}
                 }
             }else if (args.length == 2
                     && (args[0].equalsIgnoreCase(arguments[2]) || args[0].equalsIgnoreCase(arguments[3]))){
                 for (Player player:Bukkit.getOnlinePlayers()) {
                     String str = player.getName();
 
-                    if (str.substring(0, args[1].length()).equalsIgnoreCase(args[1])) {
-                        completer.add(str);
-                    }
+                    try {
+                        if (str.substring(0, args[1].length()).equalsIgnoreCase(args[1])) {
+                            completer.add(str);
+                        }
+                    }catch (StringIndexOutOfBoundsException ignored){}
                 }
             }
         }
@@ -78,13 +84,14 @@ public class Commands implements CommandExecutor, TabCompleter {
             player.addScoreboardTag(PLAYER_TAG);
             if (!player.isSneaking()) {
                 player.addScoreboardTag(FLY);
-            }else {
+            } else {
                 player.addScoreboardTag(NOT_FLY);
             }
+            player.sendTitle(ChatColor.AQUA+"JustFly", ChatColor.GRAY+"bazu1229"+ChatColor.WHITE+" 만듬", 10, 20, 10);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
         }
 
-        Bukkit.broadcastMessage("저스트 플라이가 시작되었습니다!");
-        Bukkit.broadcastMessage("웅크리기를 조절해서 내려가거나 올라가세요!");
+        Bukkit.broadcastMessage("웅크리기를 조절해서 내려가거나 올라가세요.");
     }
 
     private static void justFlyStart(Player player){
@@ -95,7 +102,8 @@ public class Commands implements CommandExecutor, TabCompleter {
             player.addScoreboardTag(NOT_FLY);
         }
 
-        player.sendMessage("저스트 플라이가 시작되었습니다!");
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
+        player.sendTitle(ChatColor.AQUA+"JustFly", ChatColor.GRAY+"bazu1229"+ChatColor.WHITE+"만듬", 10, 20, 10);
         player.sendMessage("웅크리기를 조절해서 내려가거나 올라가세요!");
     }
 
