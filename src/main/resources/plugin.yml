@@ -3,3 +3,6 @@ version: ${project.version}
 main: bazu.justfly.JustFly
 api-version: 1.17
 authors: [ bazu ]
+commands:
+  justfly:
+    usage: justfly [start/end/add]

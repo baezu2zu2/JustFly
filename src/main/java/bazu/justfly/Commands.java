@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +14,28 @@ import java.util.List;
 import static bazu.justfly.Fly.*;
 
 public class Commands implements CommandExecutor, TabCompleter {
+    String[] arguments = new String[]{"start", "end", "add", "remove"};
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player){
             if (label.equalsIgnoreCase("justfly")) {
                 if (args.length == 1){
-                    if (args[0].equalsIgnoreCase("start")) {
-                        justFlyStart((Player)sender);
+                    if (args[0].equalsIgnoreCase(arguments[0])) {
+                        justFlyStart();
 
-                    } else if (args[0].equalsIgnoreCase("end")) {
-                        justFlyEnd((Player) sender);
+                    } else if (args[0].equalsIgnoreCase(arguments[1])) {
+                        justFlyEnd();
+                    }
+                }else if (args.length == 2){
+                    if (args[0].equalsIgnoreCase(arguments[2])){
+                        if (Bukkit.getPlayer(args[1]) != null) {
+                            justFlyStart(Bukkit.getPlayer(args[1]));
+                        }
+                    }else if (args[0].equalsIgnoreCase(arguments[3])){
+                        if (Bukkit.getPlayer(args[1]) != null){
+                            justFlyEnd(Bukkit.getPlayer(args[1]));
+                        }
                     }
                 }
             }
@@ -36,8 +49,20 @@ public class Commands implements CommandExecutor, TabCompleter {
 
         if (label.equalsIgnoreCase("justfly")){
             if (args.length == 1){
-                completer.add("start");
-                completer.add("end");
+                for (String str:arguments) {
+                    if (str.substring(0, args[0].length()).equalsIgnoreCase(args[0])) {
+                        completer.add(str);
+                    }
+                }
+            }else if (args.length == 2
+                    && (args[0].equalsIgnoreCase(arguments[2]) || args[0].equalsIgnoreCase(arguments[3]))){
+                for (Player player:Bukkit.getOnlinePlayers()) {
+                    String str = player.getName();
+
+                    if (str.substring(0, args[1].length()).equalsIgnoreCase(args[1])) {
+                        completer.add(str);
+                    }
+                }
             }
         }
 
@@ -46,41 +71,50 @@ public class Commands implements CommandExecutor, TabCompleter {
         return completer;
     }
 
-    private static void justFlyStart(Player sender){
+    private static void justFlyStart(){
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
 
-        if (!sender.getScoreboardTags().contains(PLAYER_TAG)) {
-
-            for (Player player : players) {
-                player.addScoreboardTag(PLAYER_TAG);
-                if (!player.isSneaking()) {
-                    player.addScoreboardTag(FLY);
-                }else {
-                    player.addScoreboardTag(NOT_FLY);
-                }
+        for (Player player : players) {
+            player.addScoreboardTag(PLAYER_TAG);
+            if (!player.isSneaking()) {
+                player.addScoreboardTag(FLY);
+            }else {
+                player.addScoreboardTag(NOT_FLY);
             }
-
-            Bukkit.broadcastMessage("저스트 플라이가 시작되었습니다!");
-            Bukkit.broadcastMessage("웅크리기를 조절해서 내려가거나 올라가세요!");
-
-        } else {
-            sender.sendMessage("저스트 플라이가 이미 시작되었습니다!");
         }
+
+        Bukkit.broadcastMessage("저스트 플라이가 시작되었습니다!");
+        Bukkit.broadcastMessage("웅크리기를 조절해서 내려가거나 올라가세요!");
     }
 
-    private static void justFlyEnd(Player sender){
-        List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
-        if (sender.getScoreboardTags().contains(PLAYER_TAG)) {
-            for (Player player : players) {
-                player.removeScoreboardTag(PLAYER_TAG);
-                player.removeScoreboardTag(FLY);
-                player.removeScoreboardTag(NOT_FLY);
-            }
-
-            Bukkit.broadcastMessage("저스트 플라이가 끝났습니다!");
-
-        } else {
-            sender.sendMessage("저스트 플라이가 이미 끝났습니다!");
+    private static void justFlyStart(Player player){
+        player.addScoreboardTag(PLAYER_TAG);
+        if (!player.isSneaking()) {
+            player.addScoreboardTag(FLY);
+        }else {
+            player.addScoreboardTag(NOT_FLY);
         }
+
+        player.sendMessage("저스트 플라이가 시작되었습니다!");
+        player.sendMessage("웅크리기를 조절해서 내려가거나 올라가세요!");
+    }
+
+    private static void justFlyEnd(){
+        List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
+        for (Player player : players) {
+            player.removeScoreboardTag(PLAYER_TAG);
+            player.removeScoreboardTag(FLY);
+            player.removeScoreboardTag(NOT_FLY);
+        }
+
+        Bukkit.broadcastMessage("저스트 플라이가 끝났습니다!");
+    }
+
+    private static void justFlyEnd(Player player){
+        player.removeScoreboardTag(PLAYER_TAG);
+        player.removeScoreboardTag(FLY);
+        player.removeScoreboardTag(NOT_FLY);
+
+        player.sendMessage("저스트 플라이가 끝났습니다!");
     }
 }
