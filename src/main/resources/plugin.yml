@@ -5,4 +5,4 @@ api-version: 1.17
 authors: [ bazu ]
 commands:
   justfly:
-    usage: justfly [start/end/add]
+    permission: op

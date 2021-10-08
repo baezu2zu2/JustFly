@@ -11,7 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
-public class Fly implements Listener {
+public class Flying implements Listener {
     public static final String PLAYER_TAG = "justFly";
     public static final String NOT_FLY = "notFly";
     public static final String FLY = "fly";
@@ -29,22 +29,34 @@ public class Fly implements Listener {
         }
     }
 
-    @EventHandler
-    public void sleep(PlayerBedEnterEvent event){
-        event.getPlayer().removePotionEffect(PotionEffectType.LEVITATION);
-        event.getPlayer().removePotionEffect(PotionEffectType.SLOW_FALLING);
-    }
-
     public static void tagFly(){
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         for (Player player:players) {
-            if (player.getScoreboardTags().contains(FLY)){
+            if (!player.isSleeping() && player.isFlying()) {
+                if (player.getScoreboardTags().contains(FLY)) {
+
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 3,
+                            false, false));
+                    player.removePotionEffect(PotionEffectType.SLOW_FALLING);
+
+                } else if (player.getScoreboardTags().contains(NOT_FLY)) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20, 0,
+                            false, false));
+                    player.removePotionEffect(PotionEffectType.LEVITATION);
+                }
+            }
+        }
+    }
+
+    public static void tagFly(Player player){
+        if (!player.isSleeping()) {
+            if (player.getScoreboardTags().contains(FLY)) {
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 3,
                         false, false));
                 player.removePotionEffect(PotionEffectType.SLOW_FALLING);
 
-            }else if (player.getScoreboardTags().contains(NOT_FLY)){
+            } else if (player.getScoreboardTags().contains(NOT_FLY)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20, 0,
                         false, false));
                 player.removePotionEffect(PotionEffectType.LEVITATION);
@@ -52,20 +64,7 @@ public class Fly implements Listener {
         }
     }
 
-    public static void tagFly(Player player){
-        if (player.getScoreboardTags().contains(FLY)){
-
-            player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 3,
-                    false, false));
-            player.removePotionEffect(PotionEffectType.SLOW_FALLING);
-
-        }else if (player.getScoreboardTags().contains(NOT_FLY)){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 20, 0,
-                    false, false));
-            player.removePotionEffect(PotionEffectType.LEVITATION);
-        }
-    }
-
+    @Deprecated
     public static void notTagFly(){
         List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
         for (Player player:players) {

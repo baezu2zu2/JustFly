@@ -9,36 +9,51 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 public class JustFly extends JavaPlugin {
+
+    private static JustFly inst;
+
+    public static final BukkitRunnable FLY = new BukkitRunnable() {
+        @Override
+        public void run() {
+            List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
+            for (Player player:players) {
+                Flying.tagFly(player);
+                Flying.notTagFly(player);
+            }
+        }
+    };
+
+    public static final BukkitRunnable DETECT = new BukkitRunnable() {
+        @Override
+        public void run() {
+            List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
+            for (Player player:players) {
+                Detect.detactLand(player);
+            }
+        }
+    };
+
+    public static BukkitRunnable fly = FLY;
+
+    public static BukkitRunnable detect = DETECT;
+
+    public static JustFly getInst() {
+        return inst;
+    }
+
     @Override
     public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(new Fly(), this);
+
+        inst = this;
+
+        Bukkit.getPluginManager().registerEvents(new Flying(), this);
+        Bukkit.getPluginManager().registerEvents(new Events(), this);
         Bukkit.getPluginCommand("justfly").setExecutor(new Commands());
         Bukkit.getPluginCommand("justfly").setTabCompleter(new Commands());
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
-                for (Player player:players) {
-                    if (!player.isSleeping()) {
-                        Fly.tagFly(player);
-                        Fly.notTagFly(player);
-                    }
-                }
-            }
-        }.runTaskTimer(this, 0, 10);
+        fly.runTaskTimer(this, 0, 10);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                List<Player> players = (List<Player>) Bukkit.getOnlinePlayers();
-                for (Player player:players) {
-                    if (!player.isSleeping()) {
-                        Detact.detactLand(player);
-                    }
-                }
-            }
-        }.runTaskTimer(this, 0, 10);
+        detect.runTaskTimer(this, 0, 10);
 
     }
 
