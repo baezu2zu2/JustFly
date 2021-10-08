@@ -6,3 +6,4 @@ authors: [ bazu ]
 commands:
   justfly:
     permission: op
+  helpJustFly:

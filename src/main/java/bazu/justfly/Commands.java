@@ -16,20 +16,20 @@ import java.util.List;
 import static bazu.justfly.Flying.*;
 
 public class Commands implements CommandExecutor, TabCompleter {
-    String[] arguments = new String[]{"start", "end", "add", "remove", "?"};
+    String[] arguments = new String[]{"start", "end", "add", "remove"};
     private String[] tutorials = new String[]{
-            "JustFly"
-            , "(야생 기준)난이도 : 중상"
-            , "저스트플라이는 하늘을 날며 야생을 하도록 의도된 플러그인입니다."
-            , "웅크리기를 누르면 하락하고, 웅크리기를 떼면 상승합니다."
-            , "저스트플라이의 명령어 입니다."
-            , "-/justfly "+arguments[0]+"로 모든 플레이어를 게임에 참가시킵니다."
-            , "-/justfly "+arguments[1]+"로 모든 플레이어를 게임에서 제외시킵니다."
-            , "-/justfly "+arguments[2]+"로 특정 플레이어만 게임에 참가시킵니다."
-            , "-/justfly "+arguments[3]+"로 특정 플레이어만 게임에서 제외시킵니다."
-            , "\n"
-            , "재밌게 즐겨주세요!"
-            , "by "+ ChatColor.GRAY +"bazu1229"+ChatColor.WHITE
+            "JustFly",
+            "(야생 기준)난이도 : 중상",
+            "저스트플라이는 하늘을 날며 야생을 하도록 의도된 플러그인입니다.",
+            "웅크리기를 누르면 하락하고, 웅크리기를 떼면 상승합니다.",
+            "저스트플라이의 명령어 입니다.",
+            "-/justfly "+arguments[0]+"로 모든 플레이어를 게임에 참가시킵니다.",
+            "-/justfly "+arguments[1]+"로 모든 플레이어를 게임에서 제외시킵니다.",
+            "-/justfly "+arguments[2]+"로 특정 플레이어만 게임에 참가시킵니다.",
+            "-/justfly "+arguments[3]+"로 특정 플레이어만 게임에서 제외시킵니다.",
+            "\n",
+            "재밌게 즐겨주세요!",
+            "by "+ ChatColor.GRAY +"bazu1229"+ChatColor.WHITE
     };
 
     @Override
@@ -41,8 +41,6 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                 } else if (args[0].equalsIgnoreCase(arguments[1])) {
                     justFlyEnd();
-                } else if (args[0].equalsIgnoreCase(arguments[4])){
-                    tutorial(sender);
                 }
             }else if (args.length == 2){
                 if (args[0].equalsIgnoreCase(arguments[2])){
@@ -55,6 +53,8 @@ public class Commands implements CommandExecutor, TabCompleter {
                     }
                 }
             }
+        }else if (label.equalsIgnoreCase("helpJustFly")){
+            tutorial(sender);
         }
         return true;
     }
